@@ -1,6 +1,8 @@
-# 🎯 Análisis Predictivo de Ingresos (Adult Income Dataset)
+# 🎯 Adult Income Predcition (End-to-End MLOps Pipeline)
 
 ![Python Version](https://img.shields.io/badge/python-3.12-blue)
+![Docker](https://img.shields.io/badge/docker-enabled-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-ready-009688)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-in--progress-yellow)
 
