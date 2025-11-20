@@ -6,40 +6,60 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-in--progress-yellow)
 
-Este proyecto desarrolla un flujo de trabajo completo de Machine Learning para predecir si una persona gana más de $50,000 anuales basándose en datos demográficos y laborales.
+Este proyecto desarrolla un flujo de trabajo completo (**End-to-End MLOps**) para predecir si una persona gana más de $50,000 anuales basándose en datos demográficos y laborales.
 
-El enfoque principal de este repositorio es demostrar un **flujo de trabajo de machine learning robusto y profesional**, desde la limpieza de datos hasta la selección de modelos mediante **Validación Cruzada Anidada (NCV)** para obtener una estimación de rendimiento imparcial.
+op1:El enfoque principal de este repositorio es demostrar un **flujo de trabajo de machine learning robusto y profesional**, desde la limpieza de datos hasta la selección de modelos mediante **Validación Cruzada Anidada (NCV)** para obtener una estimación de rendimiento imparcial.
+
+op2:El enfoque principal de este repositorio ha evolucionado de un análisis exploratorio a una **arquitectura de software de Machine Learning robusta, modular y desplegable**, integrando las mejores prácticas de la industria para garantizar la reproducibilidad y escalabilidad.
 
 ---
 
 ## 📋 Tabla de Contenidos
-- [Descripción del Proyecto](#descripción-del-proyecto)
-- [Características Principales](#características-principales)
-- [Tecnologías Utilizadas](#tecnologías-utilizadas)
-- [Instalación y Uso](#instalación-y-uso)
-- [Metodología](#metodología)
-- [Resultados](#resultados)
-- [Estructura del Repositorio](#estructura-del-repositorio)
-- [Autor](#autor)
+- [Arquitectura y Tech Stack](#-arquitectura-y-tech-stack)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Instalación y Uso (Docker & Local)](#-instalación-y-uso)
+- [API de Predicción](#-api-de-predicción)
+- [Metodología de ML](#-metodología-de-ml)
+- [Resultados del Modelo](#-resultados-del-modelo)
+- [Autor](#-autor)
 
 ---
 
-## 🧐 Descripción del Proyecto
+## 🛠 Arquitectura y Tech Stack
 
-Utilizando el famoso dataset **"Adult Census Income"** del repositorio [UCI Machine Learning](https://archive.ics.uci.edu/dataset/2/adult), este proyecto aborda un problema de clasificación binaria desbalanceada.
+Este proyecto va más allá del modelado tradicional, implementando un ciclo de vida completo:
 
-El objetivo no es solo obtener la mayor precisión, sino construir un **pipeline reproducible y profesional** que incluya limpieza de datos, ingeniería de características, selección de modelos imparcial y ajuste de hiperparámetros.
+* **Lenguaje:** Python 3.11
+* **Gestión de Dependencias:** [uv](https://github.com/astral-sh/uv) (Ultra-rápido y moderno).
+* **Configuración:** [Hydra](https://hydra.cc/) (Gestión de hiperparámetros centralizada vía YAML).
+* **Modelado:** XGBoost + Scikit-Learn (Pipelines avanzados).
+* **Optimización:** [Optuna](https://optuna.org/) (Ajuste bayesiano de hiperparámetros).
+* **Tracking:** [MLflow](https://mlflow.org/) (Registro de experimentos y métricas).
+* **Despliegue (Serving):** FastAPI + Pydantic (API REST de alto rendimiento).
+* **Contenedorización:** Docker (Entorno aislado y reproducible).
 
 ---
 
-## 🚀 Características Principales
+## 📂 Estructura del Proyecto
 
-* **Preprocesamiento Robusto:** Uso de `ColumnTransformer` y `Pipeline` de Scikit-Learn para encapsular la limpieza, imputación de nulos y codificación (OneHotEncoding) de variables categóricas.
-* **Validación Cruzada Anidada (NCV):** Implementación de una estrategia de 5 folds exteriores y 3 interiores para separar la optimización de hiperparámetros de la evaluación del error, garantizando resultados realistas.
-* **Manejo de Desbalanceo:** Configuración específica de pesos de clase (`scale_pos_weight`) en modelos de boosting.
-* **Comparativa de Modelos:** Evaluación de Regresión Logística, KNN, Random Forest y XGBoost.
-* **Gestión de Dependencias Moderna:** Uso de `pyproject.toml` para una instalación limpia y estandarizada.
-* **Reproducibilidad:** Control estricto de la aleatoriedad mediante semillas globales (`SEED`).
+Se sigue una estructura de paquete modular:
+
+```text
+.
+├── config/             # Configuración centralizada (Hydra)
+│   └── config.yaml     # Hiperparámetros y rutas
+├── data/               # Dataset (adult.csv)
+├── docker/             # Archivos auxiliares de Docker
+├── notebooks/          # EDA y experimentación inicial (Legacy)
+├── src/                # Código fuente modular
+│   ├── api.py          # Endpoint de inferencia (FastAPI)
+│   ├── pipeline.py     # Construcción del modelo y Sklearn Pipelines
+│   ├── preprocessing.py# Limpieza e ingeniería de datos robusta
+│   └── train.py        # Script maestro de entrenamiento y serialización
+├── Dockerfile          # Definición de la imagen de producción
+├── pyproject.toml      # Dependencias del proyecto (uv)
+└── README.md           # Documentación
+``` 
 
 ---
 
@@ -55,45 +75,14 @@ El objetivo no es solo obtener la mayor precisión, sino construir un **pipeline
 
 ## 💻 Instalación y Uso
 
-Este proyecto utiliza `uv`, un instalador y gestor de entornos virtuales de Python de alto rendimiento, para una configuración rápida. Las dependencias están definidas en el archivo `pyproject.toml`.
+Tienes dos formas de ejecutar este proyecto: la Profesional (Docker) y la de Desarrollo (Local).
 
-**Prerrequisito:** Asegúrate de tener `uv` instalado. Si no es así, consulta la [guía oficial de instalación de UV](https
-://astral.sh/uv#installation).
+**Opción A: Usando Docker (Recomendado)**
 
-1.  **Clonar el repositorio:**
-    ```bash
-    git clone [https://github.com/](https://github.com/)[TU_USUARIO]/adult-income-analysis.git
-    cd adult-income-analysis
-    ```
+No necesitas instalar Python ni librerías, solo Docker. garantiza que funcione igual en cualquier máquina. 
 
-2.  **Crear el entorno virtual:**
-    `uv` creará un entorno virtual llamado `.venv` en el directorio actual.
-    ```bash
-    uv venv
-    ```
+1. **Construir la imagen:** Descarga dependencias, entrena el modelo y prepara la API automáticamente.
 
-3.  **Activar el entorno:**
-    ```bash
-    # macOS / Linux
-    source .venv/bin/activate
-    
-    # Windows (PowerShell)
-    .venv\Scripts\Activate.ps1
-    
-    # Windows (CMD)
-    .venv\Scripts\activate.bat
-    ```
-
-4.  **Instalar dependencias:**
-    `uv` leerá el archivo `pyproject.toml` e instalará todas las dependencias del proyecto (incluyendo `jupyter`) a gran velocidad.
-    ```bash
-    uv pip install .
-    ```
-
-5.  **Ejecutar el Notebook:**
-    ```bash
-    jupyter notebook notebooks/Proyecto_Adult_Income.ipynb
-    ```
 
 ---
 
