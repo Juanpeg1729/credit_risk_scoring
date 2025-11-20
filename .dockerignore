@@ -1,0 +1,5 @@
+.git
+.venv
+mlruns
+__pycache__
+*.pkl
