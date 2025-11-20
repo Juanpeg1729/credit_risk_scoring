@@ -1,50 +1,63 @@
 import hydra
 from omegaconf import DictConfig
+import joblib
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import f1_score, classification_report
 
-# Importamos las funciones que acabas de crear en preprocessing.py
-# Esto conecta tu script principal con tu módulo de limpieza
+# Importamos nuestro módulo de preprocesamiento
 from src.preprocessing import load_data, clean_dataframe, split_features_target
+from src.pipeline import get_training_pipeline
+
 
 @hydra.main(version_base=None, config_path="../config", config_name="config")
 def main(cfg: DictConfig):
-    # 1. Mensaje de inicio (igual que antes, para saber qué configuración usas)
-    print(f"🚀 Iniciando pipeline para el modelo: {cfg.model.name}")
-    print(f"📂 Ruta de datos configurada: {cfg.data.path}")
+    print(f"🚀 Iniciando entrenamiento profesional para: {cfg.model.name}")
     
-    # 2. Carga de Datos (Usando tu nueva función)
-    try:
-        df_raw = load_data(cfg.data.path)
-        print(f"📦 Datos crudos cargados. Dimensiones: {df_raw.shape}")
-    except FileNotFoundError:
-        print("❌ Error: No se encontró el archivo csv. Revisa que esté en la carpeta 'data/'.")
-        return
-
-    # 3. Limpieza y Preprocesamiento (Usando tu nueva función)
-    # Aquí es donde se arregla lo del '[5E-1]', se borran duplicados, etc.
+    # --- 1. INGENIERÍA DE DATOS ---
+    df_raw = load_data(cfg.data.path)
     df_clean = clean_dataframe(df_raw)
-    print(f"✨ Datos limpios. Dimensiones: {df_clean.shape}")
-
-    # 4. Separación de Features (X) y Target (y)
     X, y = split_features_target(df_clean, cfg.data.target_col)
 
-    # 5. División Train/Test 
-    # Fíjate como usamos 'cfg.data.test_size' en vez de escribir 0.2 a mano.
-    # ¡Eso es código profesional! Si quieres cambiarlo a 0.3, solo tocas el yaml.
+    # Split
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, 
         test_size=cfg.data.test_size, 
         random_state=cfg.data.random_state,
         stratify=y
     )
+    print(f"✅ Datos listos. Train shape: {X_train.shape}")
+
+    # --- 2. DEFINICIÓN DEL PIPELINE ---
+    # Identificamos columnas dinámicamente
+    num_cols = X.select_dtypes(include=['int64', 'float64']).columns.tolist()
+    cat_cols = X.select_dtypes(include=['object', 'category']).columns.tolist()
     
-    print("-" * 30)
-    print(f"📊 Conjunto de Entrenamiento (Train): {X_train.shape}")
-    print(f"📊 Conjunto de Prueba (Test): {X_test.shape}")
-    print("-" * 30)
+    print(f"🔧 Configurando Pipeline con parámetros del YAML...")
+    # Convertimos la config de Hydra a diccionario normal de Python
+    model_params = dict(cfg.model.params)
     
-    print("\n✅ Fase de Carga y Limpieza completada con éxito.")
+    pipeline = get_training_pipeline(model_params, num_cols, cat_cols)
+
+    # --- 3. ENTRENAMIENTO ---
+    print("Training model... (Esto puede tardar un poco)")
+    pipeline.fit(X_train, y_train)
+
+    # --- 4. EVALUACIÓN ---
+    print("Evaluating...")
+    y_pred = pipeline.predict(X_test)
+    f1 = f1_score(y_test, y_pred)
+    
+    print("-" * 60)
+    print(f"🏆 Resultado Final (F1-Score): {f1:.4f}")
+    print("-" * 60)
+    print("Reporte detallado:")
+    print(classification_report(y_test, y_pred))
+
+    # --- 5. GUARDADO DEL MODELO (SERIALIZACIÓN) ---
+    model_path = "final_model.pkl"
+    joblib.dump(pipeline, model_path)
+    print(f"💾 Modelo guardado exitosamente en: {model_path}")
 
 if __name__ == "__main__":
     main()
