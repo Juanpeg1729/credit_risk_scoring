@@ -1,0 +1,14 @@
+artifact_uri: file:///home/juanpe/personal/adult_income/mlruns/303455327645573076/af161537482b4d09bf961c41784a1abb/artifacts
+end_time: 1763575872306
+entry_point_name: ''
+experiment_id: '303455327645573076'
+lifecycle_stage: active
+run_id: af161537482b4d09bf961c41784a1abb
+run_name: polite-bird-666
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763575871163
+status: 3
+tags: []
+user_id: juanpe

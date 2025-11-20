@@ -1,0 +1,14 @@
+artifact_uri: file:///home/juanpe/personal/adult_income/mlruns/303455327645573076/7dd40b06783045cd9958f28613d4c23c/artifacts
+end_time: 1763575885622
+entry_point_name: ''
+experiment_id: '303455327645573076'
+lifecycle_stage: active
+run_id: 7dd40b06783045cd9958f28613d4c23c
+run_name: luminous-cub-662
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763575882706
+status: 3
+tags: []
+user_id: juanpe

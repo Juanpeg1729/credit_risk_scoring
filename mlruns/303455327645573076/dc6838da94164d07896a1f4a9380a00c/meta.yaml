@@ -1,0 +1,14 @@
+artifact_uri: file:///home/juanpe/personal/adult_income/mlruns/303455327645573076/dc6838da94164d07896a1f4a9380a00c/artifacts
+end_time: 1763575736548
+entry_point_name: ''
+experiment_id: '303455327645573076'
+lifecycle_stage: active
+run_id: dc6838da94164d07896a1f4a9380a00c
+run_name: enthused-donkey-260
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763575735278
+status: 3
+tags: []
+user_id: juanpe

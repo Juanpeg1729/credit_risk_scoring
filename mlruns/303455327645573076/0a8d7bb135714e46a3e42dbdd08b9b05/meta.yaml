@@ -1,0 +1,14 @@
+artifact_uri: file:///home/juanpe/personal/adult_income/mlruns/303455327645573076/0a8d7bb135714e46a3e42dbdd08b9b05/artifacts
+end_time: 1763575721114
+entry_point_name: ''
+experiment_id: '303455327645573076'
+lifecycle_stage: active
+run_id: 0a8d7bb135714e46a3e42dbdd08b9b05
+run_name: thundering-sow-670
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763575716360
+status: 3
+tags: []
+user_id: juanpe

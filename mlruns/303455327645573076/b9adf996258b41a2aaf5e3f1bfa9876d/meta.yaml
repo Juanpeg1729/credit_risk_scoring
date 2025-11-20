@@ -1,0 +1,14 @@
+artifact_uri: file:///home/juanpe/personal/adult_income/mlruns/303455327645573076/b9adf996258b41a2aaf5e3f1bfa9876d/artifacts
+end_time: 1763575871159
+entry_point_name: ''
+experiment_id: '303455327645573076'
+lifecycle_stage: active
+run_id: b9adf996258b41a2aaf5e3f1bfa9876d
+run_name: polite-lynx-459
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763575868609
+status: 3
+tags: []
+user_id: juanpe

@@ -1,0 +1,14 @@
+artifact_uri: file:///home/juanpe/personal/adult_income/mlruns/303455327645573076/477636ac822245d0bd93ed04dac5d355/artifacts
+end_time: 1763575727119
+entry_point_name: ''
+experiment_id: '303455327645573076'
+lifecycle_stage: active
+run_id: 477636ac822245d0bd93ed04dac5d355
+run_name: beautiful-sloth-220
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763575724111
+status: 3
+tags: []
+user_id: juanpe

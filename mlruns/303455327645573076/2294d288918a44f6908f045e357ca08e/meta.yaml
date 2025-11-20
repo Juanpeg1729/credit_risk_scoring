@@ -1,0 +1,14 @@
+artifact_uri: file:///home/juanpe/personal/adult_income/mlruns/303455327645573076/2294d288918a44f6908f045e357ca08e/artifacts
+end_time: 1763575738848
+entry_point_name: ''
+experiment_id: '303455327645573076'
+lifecycle_stage: active
+run_id: 2294d288918a44f6908f045e357ca08e
+run_name: efficient-ox-547
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763575736552
+status: 3
+tags: []
+user_id: juanpe
