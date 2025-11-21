@@ -1,4 +1,4 @@
-# 🎯 Adult Income Predcition (End-to-End MLOps Pipeline)
+# 🎯 Adult Income Prediction (End-to-End MLOps Pipeline)
 
 ![Python Version](https://img.shields.io/badge/python-3.12-blue)
 ![Docker](https://img.shields.io/badge/docker-enabled-blue)
@@ -8,9 +8,7 @@
 
 Este proyecto desarrolla un flujo de trabajo completo (**End-to-End MLOps**) para predecir si una persona gana más de $50,000 anuales basándose en datos demográficos y laborales.
 
-op1:El enfoque principal de este repositorio es demostrar un **flujo de trabajo de machine learning robusto y profesional**, desde la limpieza de datos hasta la selección de modelos mediante **Validación Cruzada Anidada (NCV)** para obtener una estimación de rendimiento imparcial.
-
-op2:El enfoque principal de este repositorio ha evolucionado de un análisis exploratorio a una **arquitectura de software de Machine Learning robusta, modular y desplegable**, integrando las mejores prácticas de la industria para garantizar la reproducibilidad y escalabilidad.
+El enfoque principal de este repositorio es presentar una **arquitectura de software de Machine Learning robusta, modular y desplegable**, integrando las mejores prácticas de la industria para garantizar la reproducibilidad y escalabilidad. Además, se lleva a cabo un flujo de trabajo de machine learning profesional, desde la limpieza de datos hasta la selección de modelos mediante **Validación Cruzada Anidada (NCV)** para obtener una estimación de rendimiento imparcial.
 
 ---
 
@@ -63,77 +61,99 @@ Se sigue una estructura de paquete modular:
 
 ---
 
-## 🛠 Tecnologías Utilizadas
-
-* **Lenguaje:** Python 3.x
-* **Análisis de Datos:** Pandas, NumPy
-* **Visualización:** Matplotlib, Seaborn
-* **Machine Learning:** Scikit-Learn, XGBoost
-* **Entorno:** Jupyter Notebook / Google Colab
-
----
-
 ## 💻 Instalación y Uso
 
 Tienes dos formas de ejecutar este proyecto: la Profesional (Docker) y la de Desarrollo (Local).
 
+
 **Opción A: Usando Docker (Recomendado)**
 
-No necesitas instalar Python ni librerías, solo Docker. garantiza que funcione igual en cualquier máquina. 
+No necesitas instalar Python ni librerías, solo Docker. Garantiza que funcione igual en cualquier máquina. 
 
 1. **Construir la imagen:** Descarga dependencias, entrena el modelo y prepara la API automáticamente.
 
+```bash
+docker build -t adult-income-app .
+```
 
----
-
-## ⚙️ Metodología
-
-El flujo de trabajo sigue los siguientes pasos:
-
-1.  **Análisis Exploratorio (EDA):** Detección de valores nulos (codificados como '?'), análisis de correlaciones y eliminación de duplicados.
-2.  **Feature Engineering:** Transformación de la variable objetivo y selección de características numéricas y categóricas.
-3.  **Pipeline de Preprocesamiento:**
-    * *Numéricas:* Imputación y Estandarización (`StandardScaler`).
-    * *Categóricas:* Imputación (moda) y Codificación (`OneHotEncoder`).
-4.  **Selección de Modelos (Nested CV):**
-    Se probaron múltiples algoritmos. Debido a la complejidad computacional y el tamaño del dataset (~30k muestras), se priorizaron modelos de ensamblaje sobre SVM con kernels no lineales.
-5.  **Entrenamiento Final:** El mejor modelo (XGBoost) se re-entrenó con el dataset completo utilizando los hiperparámetros óptimos encontrados.
-
----
-
-## 📊 Resultados
-
-Tras ejecutar la Validación Cruzada Anidada, se comparó el rendimiento de los modelos utilizando la métrica **F1-Score** (debido al desbalanceo de clases).
-
-| Modelo | F1-Score Medio (NCV) | Desviación Estándar |
-| :--- | :--- | :--- |
-| **XGBoost** | **0.7220** | +/- 0.008 |
-| Random Forest | 0.6785 | +/- 0.012 |
-| Regresión Logística | 0.6565 | +/- 0.008 |
-| KNN | 0.6290 | +/- 0.011 |
-
-**Visualización de Resultados:**
-
-![Texto alternativo para la imagen](images/ncv_model_comparison.png)
-
-**Conclusión:**
-El modelo **XGBoost** demostró ser superior, capturando mejor las relaciones no lineales y manejando eficazmente el desbalanceo de clases gracias al ajuste de `scale_pos_weight`.
-
----
-
-## 📂 Estructura del Repositorio
-
-```text
-.
-├── adult.csv                   # Dataset Adult Census Income (Fuente original del proyecto).
-├── Proyecto_Adult_Income.ipynb # Notebook principal con el análisis completo (EDA, Preprocesamiento, NCV).
-├── pyproject.toml              # Definición de dependencias (para instalación con UV).
-├── README.md                   # Documentación del proyecto (este archivo).
-├── images/                     # Contiene los gráficos para el README.
-└── .gitignore                  # Reglas para ignorar archivos de entorno (.venv, etc.).
-
+2. **Ejecutar el contenedor:**
 
 ```
+docker run -p 8000:8000 adult-income-app
+```
+
+3. **Acceder:** abre tu navegador en http://localhost:8000/docs
+
+
+**Opción B: Ejecución Local (Desarrollo)**
+
+Si deseas editar el código o entrenar manualmente. Requisito: tener uv instalado.
+
+1. **Instalar dependencias:**
+
+```
+uv sync
+```
+
+2. **Entrenar el modelo (Pipeline completo):** Ejecuta la limpieza, validación y entrenamiento.
+
+```
+uv run python -m src.train
+```
+
+3. **Levantar la API:**
+
+```
+uv run uvicorn src.api:app --reload
+```
+
+---
+
+## 🧪 API de Predicción
+
+El proyecto incluye una API REST documentada automáticamente con Swagger UI.
+
+- **Endpoint:** `/predict` (POST)  
+- **Input:** JSON con datos demográficos (edad, educación, ocupación, etc.).  
+- **Output:** Predicción de clase (`<=50K` o `>50K`) y probabilidad de confianza.
+
+**Ejemplo de uso (Swagger UI):** *(Imagen referencial de la interfaz que verás al lanzar el proyecto)*
+
+---
+
+## 🧠 Metodología de ML
+
+Aunque el código ahora es modular, la lógica de Machine Learning subyacente se mantiene sólida:
+
+1. **Ingeniería de Datos:**
+   - Saneamiento de errores de formato (ej. valores corruptos como `5E-1`).
+   - Imputación de nulos y eliminación de duplicados.
+
+2. **Pipeline de Preprocesamiento:**
+   - `ColumnTransformer` para aplicar escalado (`StandardScaler`) a numéricas y One-Hot Encoding a categóricas.
+
+3. **Selección de Modelos:**
+   - Se utilizó **Validación Cruzada Anidada (Nested CV)** para comparar XGBoost, Random Forest y Regresión Logística sin sesgo.
+
+4. **Optimización:**
+   - Se implementó **Optuna** para el ajuste fino (fine-tuning) de hiperparámetros del modelo ganador.
+
+---
+
+## 📊 Resultados del Modelo
+
+Tras la evaluación rigurosa, **XGBoost** fue seleccionado como el modelo de producción por su capacidad para manejar desbalanceo y relaciones no lineales.
+
+| Modelo               | F1-Score Medio (NCV) | Desviación |
+|---------------------|-----------------------|------------|
+| **XGBoost (Optimizado)** | **0.7220**              | +/- 0.008  |
+| Random Forest       | 0.6785                | +/- 0.012  |
+| Regresión Logística | 0.6565                | +/- 0.008  |
+
+---
+
+### 📁 Exportar a Hojas de cálculo
+(Icono referencial)
 
 ---
 
