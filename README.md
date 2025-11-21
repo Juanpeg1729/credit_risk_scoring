@@ -152,11 +152,6 @@ Tras la evaluación rigurosa, **XGBoost** fue seleccionado como el modelo de pro
 
 ---
 
-### 📁 Exportar a Hojas de cálculo
-(Icono referencial)
-
----
-
 ## ✒️ Autor
 
 **Juan Pedro García Sanz**
