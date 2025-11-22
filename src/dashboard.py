@@ -8,11 +8,11 @@ import numpy as np
 # 1. Configuración de la página
 st.set_page_config(page_title="Adult Income Predictor", layout="wide")
 
-st.title("💰 Predictor de Ingresos (con Interpretabilidad)")
+st.title("💰 Predictor de Ingresos")
 st.markdown("Descubre si una persona gana más de **$50K/año** y *por qué*.")
 
 # 2. Carga del Modelo (con caché para que sea rápido)
-@st.cache_resource
+@st.cache_resource # Este decorador guarda el modelo en caché
 def load_model():
     return joblib.load("final_model.pkl")
 
@@ -48,16 +48,16 @@ def user_input_features():
     data = {
         'age': [age], 
         'workclass': [workclass], 
-        'education.num': [education_num],       # Antes education-num
-        'marital.status': [marital_status],     # Antes marital-status
+        'education.num': [education_num], 
+        'marital.status': [marital_status],     
         'occupation': [occupation],
         'relationship': [relationship], 
         'race': [race], 
         'sex': [sex],
-        'capital.gain': [capital_gain],         # Antes capital-gain
-        'capital.loss': [capital_loss],         # Antes capital-loss
-        'hours.per.week': [hours_per_week],     # Antes hours-per-week
-        'native.country': [native_country]      # Antes native-country
+        'capital.gain': [capital_gain],       
+        'capital.loss': [capital_loss],       
+        'hours.per.week': [hours_per_week],    
+        'native.country': [native_country]     
     }
     return pd.DataFrame(data)
 
@@ -97,7 +97,6 @@ with col1:
                 feature_names = num_cols + list(cat_names)
 
             # c) Calculamos SHAP (Usando el método robusto KernelExplainer)
-            # Para hacerlo rápido en web, usamos una función lambda directa
             predict_fn = lambda x: model.predict_proba(x)[:, 1]
             
             # Usamos un fondo sintético pequeño para velocidad (dummy background)
@@ -115,7 +114,7 @@ with col1:
             explanation = shap.Explanation(
                 values=shap_values[0], 
                 base_values=explainer.expected_value, 
-                data=X_trans[0],  # <--- CAMBIO CLAVE: Usamos el dato transformado
+                data=X_trans[0], 
                 feature_names=feature_names
             )
             

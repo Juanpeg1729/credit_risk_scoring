@@ -3,7 +3,6 @@ import numpy as np
 from typing import Tuple
 
 def load_data(filepath: str) -> pd.DataFrame:
-    """Carga el dataset desde una ruta específica."""
     print(f"   csv cargando desde: {filepath}")
     return pd.read_csv(filepath)
 
@@ -49,7 +48,6 @@ def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def split_features_target(df: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, pd.Series]:
-    """Separa X (features) e y (target)."""
     X = df.drop(columns=[target_col])
     y = df[target_col]
     return X, y
