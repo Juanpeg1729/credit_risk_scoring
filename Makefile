@@ -32,6 +32,7 @@ test: ## Ejecutar tests (cuando los tengas)
 clean: ## Limpiar archivos temporales
 	rm -rf __pycache__
 	rm -rf src/__pycache__
+	rm -rf src/outputs
 	rm -rf outputs/
 	rm -rf .pytest_cache
 	@echo "🧹 Proyecto limpio"
