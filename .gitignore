@@ -1,0 +1,29 @@
+# --- Python y Entornos ---
+__pycache__/
+*.pyc
+.venv/
+.env
+.pytest_cache/
+
+# --- Datos y Modelos (¡Muy Importante!) ---
+# Ignoramos el CSV para no llenar GitHub de datos
+data/*.csv
+# Ignoramos el modelo entrenado (se debe regenerar o bajar de un registro de modelos)
+*.pkl
+
+# --- Logs y Artefactos de ML ---
+# Logs de MLflow
+mlruns/
+.trash/
+# Salidas de Hydra
+outputs/
+multirun/
+
+# --- IDEs y Sistema Operativo ---
+.vscode/
+.idea/
+.DS_Store
+
+# --- Docker ---
+# A veces generamos archivos temporales al construir
+.docker/
