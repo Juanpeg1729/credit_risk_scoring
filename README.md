@@ -1,22 +1,23 @@
-# 🎯 Adult Income Prediction (End-to-End MLOps Pipeline)
+# 🏦 Credit Risk Scoring: End-to-End MLOps Pipeline
 
-![Python Version](https://img.shields.io/badge/python-3.12-blue)
+![Python Version](https://img.shields.io/badge/python-3.11-blue)
 ![Docker](https://img.shields.io/badge/docker-enabled-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-ready-009688)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=Streamlit&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Status](https://img.shields.io/badge/status-in--progress-yellow)
 
-Este proyecto desarrolla un flujo de trabajo completo (**End-to-End MLOps**) para predecir si una persona gana más de $50,000 anuales basándose en datos demográficos y laborales.
+Este proyecto desarrolla un flujo de trabajo completo (**End-to-End MLOps**) para la evaluación de riesgo crediticio. El sistema predice la probabilidad de impago de un cliente basándose en su perfil financiero y demográfico, utilizando datos del mercado alemán.
 
-El enfoque principal de este repositorio es presentar una **arquitectura de software de Machine Learning robusta, modular y desplegable**, integrando las mejores prácticas de la industria para garantizar la reproducibilidad y escalabilidad. Además, se lleva a cabo un flujo de trabajo de machine learning profesional, desde la limpieza de datos hasta la selección de modelos mediante **Validación Cruzada Anidada (NCV)** para obtener una estimación de rendimiento imparcial.
+El enfoque principal de este repositorio es presentar una **arquitectura de software de Machine Learning robusta, modular y desplegable**, integrando las mejores prácticas de la industria para garantizar la reproducibilidad y escalabilidad. Además, se lleva a cabo un flujo de trabajo de machine learning profesional, desde la limpieza de datos y la selección de modelos mediante **Validación Cruzada Anidada (NCV)** hasta el despliegue en contenedores Docker con interfaces de consumo (API) y explicabilidad (XAI).
 
 ---
 
 ## 📋 Tabla de Contenidos
 - [Arquitectura y Tech Stack](#-arquitectura-y-tech-stack)
 - [Estructura del Proyecto](#-estructura-del-proyecto)
-- [Instalación y Uso (Docker & Local)](#-instalación-y-uso)
-- [API de Predicción](#-api-de-predicción)
+- [Automatización (Makefile)](#-automatización-makefile)
+- [Instalación y Uso](#-instalación-y-uso)
+- [Dashboard & Interpretabilidad](#-dashboard--interpretabilidad-xai)
 - [Metodología de ML](#-metodología-de-ml)
 - [Resultados del Modelo](#-resultados-del-modelo)
 - [Autor](#-autor)
@@ -25,39 +26,56 @@ El enfoque principal de este repositorio es presentar una **arquitectura de soft
 
 ## 🛠 Arquitectura y Tech Stack
 
-Este proyecto va más allá del modelado tradicional, implementando un ciclo de vida completo:
+El proyecto integra herramientas modernas para crear un sistema robusto, modular y escalable:
 
 * **Lenguaje:** Python 3.11
-* **Gestión de Dependencias:** [uv](https://github.com/astral-sh/uv) (Ultra-rápido y moderno).
-* **Configuración:** [Hydra](https://hydra.cc/) (Gestión de hiperparámetros centralizada vía YAML).
-* **Modelado:** XGBoost + Scikit-Learn (Pipelines avanzados).
+* **Gestión de Dependencias:** [uv](https://github.com/astral-sh/uv) (Gestor de paquetes de alto rendimiento).
+* **Automatización:** **GNU Make** (Orquestación de comandos).
+* **Configuración:** [Hydra](https://hydra.cc/) (Gestión de hiperparámetros vía YAML).
+* **Modelado:** XGBoost + Scikit-Learn (Pipelines de preprocesamiento).
 * **Optimización:** [Optuna](https://optuna.org/) (Ajuste bayesiano de hiperparámetros).
-* **Tracking:** [MLflow](https://mlflow.org/) (Registro de experimentos y métricas).
-* **Despliegue (Serving):** FastAPI + Pydantic (API REST de alto rendimiento).
-* **Contenedorización:** Docker (Entorno aislado y reproducible).
+* **Interpretabilidad (XAI):** [SHAP](https://shap.readthedocs.io/) (Explicación de predicciones "Caja Negra").
+* **Interfaces:** * **FastAPI:** API REST para inferencia máquina-a-máquina.
+    * **Streamlit:** Dashboard interactivo para usuarios de negocio.
+* **Infraestructura:** Docker (Contenedorización completa).
 
 ---
 
 ## 📂 Estructura del Proyecto
 
-Se sigue una estructura de paquete modular:
+El código sigue una arquitectura de paquete modular, separando configuración, lógica y presentación:
 
 ```text
 .
-├── config/             # Configuración centralizada (Hydra)
-│   └── config.yaml     # Hiperparámetros y rutas
-├── data/               # Dataset (adult.csv)
-├── docker/             # Archivos auxiliares de Docker
-├── notebooks/          # EDA y experimentación inicial (Legacy)
-├── src/                # Código fuente modular
-│   ├── api.py          # Endpoint de inferencia (FastAPI)
-│   ├── pipeline.py     # Construcción del modelo y Sklearn Pipelines
-│   ├── preprocessing.py# Limpieza e ingeniería de datos robusta
-│   └── train.py        # Script maestro de entrenamiento y serialización
-├── Dockerfile          # Definición de la imagen de producción
-├── pyproject.toml      # Dependencias del proyecto (uv)
+├── config/             # ⚙️ Configuración centralizada (Hydra)
+├── data/               # 💾 Datos crudos (German Credit Data)
+├── docker/             # 🐳 Archivos auxiliares de Docker
+├── src/                # 🧠 Código fuente
+│   ├── api.py          # API con FastAPI
+│   ├── dashboard.py    # Interfaz Web con Streamlit + SHAP
+│   ├── pipeline.py     # Definición del modelo y transformadores
+│   ├── preprocessing.py# Limpieza e ingeniería de datos
+│   └── train.py        # Script de entrenamiento y serialización
+├── Dockerfile          # Receta de la imagen de producción
+├── Makefile            # 🕹️ Comandos de automatización
+├── pyproject.toml      # Dependencias
 └── README.md           # Documentación
 ``` 
+
+---
+
+## 🕹️ Automatización (Makefile)
+
+Para facilitar el uso, el proyecto incluye un Makefile que abstrae los comandos complejos.
+
+```bash
+make install	Instala las dependencias con uv.
+make train	Ejecuta el pipeline de entrenamiento completo.
+make api	Levanta el servidor de la API (FastAPI) en local.
+make dashboard	Lanza la aplicación web (Streamlit).
+make docker-build	Construye la imagen de Docker.
+make docker-run	Ejecuta el contenedor con la App completa.
+```
 
 ---
 
@@ -70,10 +88,11 @@ Tienes dos formas de ejecutar este proyecto: la Profesional (Docker) y la de Des
 
 No necesitas instalar Python ni librerías, solo Docker. Garantiza que funcione igual en cualquier máquina. 
 
-1. **Construir la imagen:** Descarga dependencias, entrena el modelo y prepara la API automáticamente.
+1. **Construir y ejecutar:**
 
 ```bash
-docker build -t adult-income-app .
+make docker-build
+make docker run
 ```
 
 2. **Ejecutar el contenedor:**
