@@ -2,49 +2,93 @@ import pandas as pd
 import numpy as np
 from typing import Tuple
 
+# Nombres oficiales según la documentación de UCI para 'german.data'
+COLUMN_NAMES = [
+    "Status_of_checking_account", 
+    "Duration_in_month", 
+    "Credit_history", 
+    "Purpose", 
+    "Credit_amount", 
+    "Savings_account_bonds", 
+    "Present_employment_since", 
+    "Installment_rate_in_percentage_of_disposable_income", 
+    "Personal_status_and_sex", 
+    "Other_debtors_guarantors", 
+    "Present_residence_since", 
+    "Property", 
+    "Age_in_years", 
+    "Other_installment_plans", 
+    "Housing", 
+    "Number_of_existing_credits_at_this_bank", 
+    "Job", 
+    "Number_of_people_being_liable_to_provide_maintenance_for", 
+    "Telephone", 
+    "foreign_worker", 
+    "Risk"
+]
+
 def load_data(filepath: str) -> pd.DataFrame:
-    print(f"   csv cargando desde: {filepath}")
-    return pd.read_csv(filepath)
+    """
+    Carga el dataset 'german.data'.
+    Al ser un archivo .data sin cabeceras y separado por espacios,
+    necesitamos parámetros especiales.
+    """
+    print(f"   📂 Cargando datos crudos desde: {filepath}")
+    
+    # sep='\s+' significa "cualquier espacio en blanco (espacio o tabulador)"
+    df = pd.read_csv(
+        filepath, 
+        sep=r'\s+', 
+        header=None, 
+        names=COLUMN_NAMES
+    )
+    return df
 
 def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Aplica la limpieza inicial (Pandas) al dataframe:
-    - Elimina columnas redundantes.
-    - Elimina duplicados.
-    - Convierte target a binario.
-    - Sanea valores extraños como '[5E-1]'.
+    Limpia y adapta el dataframe para el entrenamiento.
     """
     df = df.copy()
     
-    # 1. Eliminación de columnas (Lógica de tu notebook)
-    # fnlwgt: estadística irrelevante para el modelo
-    # education: redundante con education-num
-    cols_to_drop = ['fnlwgt', 'education']
-    df.drop(columns=[c for c in cols_to_drop if c in df.columns], inplace=True)
+    # 1. Tratamiento del Target (Risk)
+    # En el dataset original de UCI:
+    #   1 = Good (Bueno)
+    #   2 = Bad (Malo / Riesgo)
+    #
+    # Para Machine Learning (Detección de Riesgo/Fraude), la convención es:
+    #   0 = Clase Negativa (Normal/Good)
+    #   1 = Clase Positiva (Lo que buscamos/Bad)
     
-    # 2. Eliminación de duplicados
-    original_len = len(df)
-    df.drop_duplicates(inplace=True)
-    print(f"   🧹 Filas duplicadas eliminadas: {original_len - len(df)}")
-
-    # 3. Saneamiento de valores '?' (Los convertimos a NaN para que SimpleImputer los maneje luego)
-    df.replace('?', np.nan, inplace=True)
-    
-    # 4. Saneamiento CRÍTICO de datos sucios (El error [5E-1])
-    # Forzamos que las columnas numéricas no tengan texto raro
-    # Si encontramos algo que no es número en una columna numérica, lo hacemos NaN
-    numeric_candidates = ['age', 'education-num', 'capital-gain', 'capital-loss', 'hours-per-week']
-    for col in numeric_candidates:
-        if col in df.columns:
-            # to_numeric con coerce convierte errores (como [5E-1]) en NaN
-            df[col] = pd.to_numeric(df[col], errors='coerce')
-
-    # 5. Transformación del Target (Variable Objetivo)
-    if 'income' in df.columns:
-        # Limpiamos espacios y convertimos a 0/1
-        df['income'] = df['income'].astype(str).str.strip()
-        df['income'] = (df['income'] == '>50K').astype(int)
+    if 'Risk' in df.columns:
+        # Mapeamos: 1 -> 0, 2 -> 1
+        df['Risk'] = df['Risk'].map({1: 0, 2: 1})
+        print(f"   🎯 Target 'Risk' normalizado: 1 (Bad) / 0 (Good)")
         
+        # Validación rápida
+        risk_counts = df['Risk'].value_counts()
+        print(f"      Distribución: {risk_counts.to_dict()}")
+
+    # 2. No necesitamos borrar columnas específicas como en Adult Income
+    # porque este dataset es más técnico y todas las variables aportan valor.
+    
+    # 3. Tratamiento de tipos (Opcional pero recomendado)
+    # Algunas columnas categóricas como 'Job' a veces vienen como números.
+    # Es mejor forzarlas a texto para que el OneHotEncoder las trate bien.
+    categorical_cols = ["Status_of_checking_account", "Credit_history", "Purpose", 
+                        "Savings_account_bonds", "Present_employment_since", 
+                        "Personal_status_and_sex", "Other_debtors_guarantors", 
+                        "Property", "Other_installment_plans", "Housing", 
+                        "Telephone", "foreign_worker"]
+    
+    for col in categorical_cols:
+        if col in df.columns:
+            df[col] = df[col].astype(str)
+
+    # NUEVO: Conversión monetaria a Euros actuales
+    # Factor 0.85 aprox (Cambio DM->EUR + Inflación 30 años)
+    if 'Credit_amount' in df.columns:
+        df['Credit_amount'] = (df['Credit_amount'] * 0.85).round(0).astype(int)
+
     return df
 
 def split_features_target(df: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, pd.Series]:

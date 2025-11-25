@@ -1,8 +1,8 @@
 # config/config.yaml
 
 data:
-  path: "data/adult.csv"
-  target_col: "income"
+  path: "data/german.data"
+  target_col: "Risk"
   test_size: 0.2
   random_state: 42
 
