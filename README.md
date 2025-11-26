@@ -51,7 +51,7 @@ El código sigue una arquitectura de paquete modular, separando configuración, 
 .
 ├── config/             # ⚙️ Configuración centralizada (Hydra)
 ├── data/               # 💾 Datos crudos (German Credit Data)
-├── docker/             # 🐳 Archivos auxiliares de Docker
+├── images/             # �️ Imágenes para documentación
 ├── src/                # 🧠 Código fuente
 │   ├── api.py          # API con FastAPI
 │   ├── dashboard.py    # Interfaz Web con Streamlit + SHAP
@@ -59,6 +59,7 @@ El código sigue una arquitectura de paquete modular, separando configuración, 
 │   ├── preprocessing.py# Limpieza e ingeniería de datos
 │   └── train.py        # Script de entrenamiento y serialización
 ├── Dockerfile          # Receta de la imagen de producción
+├── docker-compose.yml  # Orquestación de contenedores
 ├── Makefile            # 🕹️ Comandos de automatización
 ├── pyproject.toml      # Dependencias
 └── README.md           # Documentación
@@ -76,7 +77,9 @@ Para facilitar el uso, el proyecto incluye un `Makefile` que abstrae los comando
 | `make train` | Ejecuta el pipeline de entrenamiento completo. |
 | `make api` | Levanta el servidor de la API (FastAPI) en local. |
 | `make dashboard` | Lanza la aplicación web (Streamlit). |
+| `make docker-build` | Construye la imagen de Docker. |
 | `make docker-up` | Levanta todo el sistema (API + Dashboard) en contenedores. |
+| `make docker-down` | Apaga todos los contenedores. |
 
 ---
 
@@ -162,6 +165,12 @@ Aunque el código ahora es modular, la lógica de Machine Learning subyacente se
 ## 📊 Resultados del Modelo
 
 Tras la evaluación rigurosa, **XGBoost** fue seleccionado como el modelo de producción por su capacidad para manejar desbalanceo y relaciones no lineales. Los resultados fueron los siguientes:
+
+| Modelo               | F1-Score Medio (NCV) | Desviación |
+|---------------------|-----------------------|------------|
+| **XGBoost (Optimizado)** | **0.7220**              | +/- 0.008  |
+| Random Forest       | 0.6785                | +/- 0.012  |
+| Regresión Logística | 0.6565                | +/- 0.008  |
 
 ![Comparación de modelos mediante Validación Cruzada Anidada](images/ncv_model_comparison.png)
 
