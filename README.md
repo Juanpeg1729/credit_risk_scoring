@@ -166,12 +166,6 @@ Aunque el código ahora es modular, la lógica de Machine Learning subyacente se
 
 Tras la evaluación rigurosa, **XGBoost** fue seleccionado como el modelo de producción por su capacidad para manejar desbalanceo y relaciones no lineales. Los resultados fueron los siguientes:
 
-| Modelo               | F1-Score Medio (NCV) | Desviación |
-|---------------------|-----------------------|------------|
-| **XGBoost (Optimizado)** | **0.7220**              | +/- 0.008  |
-| Random Forest       | 0.6785                | +/- 0.012  |
-| Regresión Logística | 0.6565                | +/- 0.008  |
-
 ![Comparación de modelos mediante Validación Cruzada Anidada](images/ncv_model_comparison.png)
 
 ---
