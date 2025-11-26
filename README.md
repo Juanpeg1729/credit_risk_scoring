@@ -85,22 +85,20 @@ Para facilitar el uso, el proyecto incluye un `Makefile` que abstrae los comando
 
 Tienes dos formas de ejecutar este proyecto: la Profesional (Docker) y la de Desarrollo (Local).
 
-**Opción A: Usando Docker (Recomendado)**
+**Opción A: Docker (Experiencia Completa)**
+Ejecuta todo el sistema (Backend y Frontend) en contenedores aislados.
 
-No necesitas instalar Python ni librerías, solo Docker. Garantiza que funcione igual en cualquier máquina. 
+1.  **Construir y Arrancar:**
+    ```bash
+    make docker-up
+    ```
 
-1. **Construir y ejecutar:**
+2.  **Acceder:**
+    * 🎨 **Dashboard (Streamlit):** http://localhost:8501
+    * ⚙️ **API (Swagger UI):** http://localhost:8000/docs
 
-```bash
-make docker-build
-make docker run
-```
-
-2. **Acceder:**
-
-```bash
-C
-```
+3.  **Apagar:**
+    Pulsa `Ctrl+C` o ejecuta `make docker-down`.
 
 **Opción B: Ejecución Local (Desarrollo)**
 
