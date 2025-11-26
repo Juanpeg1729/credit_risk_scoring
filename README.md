@@ -35,7 +35,8 @@ El proyecto integra herramientas modernas para crear un sistema robusto, modular
 * **Modelado:** XGBoost + Scikit-Learn (Pipelines de preprocesamiento).
 * **Optimización:** [Optuna](https://optuna.org/) (Ajuste bayesiano de hiperparámetros).
 * **Interpretabilidad (XAI):** [SHAP](https://shap.readthedocs.io/) (Explicación de predicciones "Caja Negra").
-* **Interfaces:** * **FastAPI:** API REST para inferencia máquina-a-máquina.
+* **Interfaces:** 
+    * **FastAPI:** API REST para inferencia máquina-a-máquina.
     * **Streamlit:** Dashboard interactivo para usuarios de negocio.
 * **Infraestructura:** Docker (Contenedorización completa).
 
@@ -132,15 +133,13 @@ make dashboard
 
 ## 🧠 Dashboard & Interpretabilidad (XAI)
 
-1. El proyecto incluye un Dashboard interactivo construido con Streamlit que permite:
+El proyecto incluye un Dashboard interactivo construido con Streamlit que permite:
 
-2. Simular perfiles de clientes mediante un formulario intuitivo.
+1. Simular perfiles de clientes mediante un formulario intuitivo.
 
-3. Obtener la predicción de riesgo en tiempo real.
+2. Obtener la predicción de riesgo en tiempo real.
 
-4. Entender el "Por qué": Integración de SHAP (SHapley Additive exPlanations) para visualizar qué variables específicas (edad, historial, saldo) empujaron la decisión del modelo hacia "Riesgo" o "Aprobado".
-
-(Asegúrate de subir una captura de tu dashboard a la carpeta images/ y descomentar esta línea)
+3. Entender el "Por qué": Integración de SHAP (SHapley Additive exPlanations) para visualizar qué variables específicas (edad, historial, saldo) empujaron la decisión del modelo hacia "Riesgo" o "Aprobado".
 
 ---
 
