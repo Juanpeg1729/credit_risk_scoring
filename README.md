@@ -76,7 +76,7 @@ Para facilitar el uso, el proyecto incluye un `Makefile` que abstrae los comando
 | `make train` | Ejecuta el pipeline de entrenamiento completo. |
 | `make api` | Levanta el servidor de la API (FastAPI) en local. |
 | `make dashboard` | Lanza la aplicación web (Streamlit). |
-| `make docker-build` | Construye la imagen de Docker. |
+| `make docker-up` | Levanta todo el sistema (API + Dashboard) en contenedores. |
 | `make docker-run` | Ejecuta el contenedor con la App completa. |
 
 ---
@@ -103,7 +103,7 @@ Ejecuta todo el sistema (Backend y Frontend) en contenedores aislados.
 
 **Opción B: Ejecución Local (Desarrollo)**
 
-Si deseas editar el código o entrenar manualmente. Requiere tener uv u make instalados.
+Si deseas editar el código o entrenar manualmente. Requiere tener uv y make instalados.
 
 1. **Instalar dependencias:**
 
@@ -111,7 +111,7 @@ Si deseas editar el código o entrenar manualmente. Requiere tener uv u make ins
 make install
 ```
 
-2. **Entrenar el modelo (Genera final.model.pkl):**
+2. **Entrenar el modelo (Genera final_model.pkl):**
 
 ```bash
 make train
@@ -143,7 +143,7 @@ El proyecto incluye un Dashboard interactivo construido con Streamlit que permit
 
 ---
 
-## 🧠 Metodología de ML
+## ⚙️ Metodología de ML
 
 Aunque el código ahora es modular, la lógica de Machine Learning subyacente se mantiene sólida:
 
@@ -169,5 +169,5 @@ Tras la evaluación rigurosa, **XGBoost** fue seleccionado como el modelo de pro
 
 **Juan Pedro García Sanz**
 
-* **GitHub:** [@Juan Pedro García Sanz](https://github.com/Juanpeg1729)
-* **LinkedIn:** [linkedin.com/in/juan-pedro-garcía-sanz-443b31343](https://www.linkedin.com/in/juan-pedro-garcía-sanz-443b31343)
+* **GitHub:** [@Juanpeg1729](https://github.com/Juanpeg1729)
+* **LinkedIn:** [Perfil de LinkedIn](https://www.linkedin.com/in/juan-pedro-garcía-sanz-443b31343)
