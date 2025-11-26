@@ -49,6 +49,13 @@ def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     Limpia y adapta el dataframe para el entrenamiento.
     """
     df = df.copy()
+
+    # 🆕 1. SANEAMIENTO INICIAL: Eliminar duplicados
+    # Es vital hacerlo antes de nada para no entrenar con datos repetidos
+    initial_rows = len(df)
+    df.drop_duplicates(inplace=True)
+    if len(df) < initial_rows:
+        print(f"   🧹 Se eliminaron {initial_rows - len(df)} filas duplicadas.")
     
     # 1. Tratamiento del Target (Risk)
     # En el dataset original de UCI:
@@ -62,6 +69,11 @@ def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     if 'Risk' in df.columns:
         # Mapeamos: 1 -> 0, 2 -> 1
         df['Risk'] = df['Risk'].map({1: 0, 2: 1})
+
+        # 🆕 3. SEGURIDAD: Eliminar filas donde el Target sea Nulo
+        # Si por algún error de lectura hay un NaN en Risk, esa fila no sirve
+        df = df.dropna(subset=['Risk'])
+
         print(f"   🎯 Target 'Risk' normalizado: 1 (Bad) / 0 (Good)")
         
         # Validación rápida
