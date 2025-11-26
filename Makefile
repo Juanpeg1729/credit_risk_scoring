@@ -22,8 +22,11 @@ dashboard: ## Abrir el Dashboard de Streamlit
 docker-build: ## Construir la imagen de Docker
 	docker build -t $(IMAGE_NAME) .
 
-docker-run: ## Ejecutar el contenedor
-	docker run -p $(PORT):$(PORT) $(IMAGE_NAME)
+docker-up: ## Levantar TODO (API + Dashboard)
+	docker-compose up
+
+docker-down: ## Apagar todo
+	docker-compose down
 
 # --- Calidad y Limpieza ---
 test: ## Ejecutar tests (cuando los tengas)

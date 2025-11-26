@@ -89,8 +89,11 @@ Tienes dos formas de ejecutar este proyecto: la Profesional (Docker) y la de Des
 Ejecuta todo el sistema (Backend y Frontend) en contenedores aislados.
 
 1.  **Construir y Arrancar:**
+    Puedes usar el atajo con Make o el comando nativo de Docker.
     ```bash
     make docker-up
+    # O si no tienes Make instalado:
+    # docker-compose up --build
     ```
 
 2.  **Acceder:**
