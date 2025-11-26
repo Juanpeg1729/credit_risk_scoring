@@ -68,16 +68,16 @@ El código sigue una arquitectura de paquete modular, separando configuración, 
 
 ## 🕹️ Automatización (Makefile)
 
-Para facilitar el uso, el proyecto incluye un Makefile que abstrae los comandos complejos.
+Para facilitar el uso, el proyecto incluye un `Makefile` que abstrae los comandos complejos.
 
-```bash
-make install	Instala las dependencias con uv.
-make train	Ejecuta el pipeline de entrenamiento completo.
-make api	Levanta el servidor de la API (FastAPI) en local.
-make dashboard	Lanza la aplicación web (Streamlit).
-make docker-build	Construye la imagen de Docker.
-make docker-run	Ejecuta el contenedor con la App completa.
-```
+| Comando | Descripción |
+| :--- | :--- |
+| `make install` | Instala las dependencias con `uv`. |
+| `make train` | Ejecuta el pipeline de entrenamiento completo. |
+| `make api` | Levanta el servidor de la API (FastAPI) en local. |
+| `make dashboard` | Lanza la aplicación web (Streamlit). |
+| `make docker-build` | Construye la imagen de Docker. |
+| `make docker-run` | Ejecuta el contenedor con la App completa. |
 
 ---
 
