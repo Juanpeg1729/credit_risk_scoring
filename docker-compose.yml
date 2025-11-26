@@ -4,7 +4,7 @@ services:
   # Contenedor 1: La API (Backend)
   api:
     build: .
-    container_name: adult-income-api
+    container_name: credit-risk-api
     command: uv run uvicorn src.api:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
@@ -12,7 +12,7 @@ services:
   # Contenedor 2: El Dashboard (Frontend)
   dashboard:
     build: .
-    container_name: adult-income-dashboard
+    container_name: credit-risk-dashboard
     command: uv run streamlit run src/dashboard.py --server.port 8501
     ports:
       - "8501:8501"

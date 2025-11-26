@@ -1,7 +1,7 @@
 # Makefile para Adult Income Project
 
 # Variables
-IMAGE_NAME = adult-income-app
+IMAGE_NAME = credit-risk-app
 PORT = 8000
 
 # --- Instalación y Entorno ---

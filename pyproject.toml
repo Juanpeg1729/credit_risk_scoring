@@ -1,7 +1,7 @@
 [project]
-name = "adult_income"
+name = "credit-risk-scoring"
 version = "0.1.0"
-description = "Initial project: Adult Income"
+description = "Initial project: Credit Risk Scoring"
 readme = "README.md"
 requires-python = ">=3.12, <3.14"
 dependencies = [
