@@ -77,7 +77,6 @@ Para facilitar el uso, el proyecto incluye un `Makefile` que abstrae los comando
 | `make api` | Levanta el servidor de la API (FastAPI) en local. |
 | `make dashboard` | Lanza la aplicación web (Streamlit). |
 | `make docker-up` | Levanta todo el sistema (API + Dashboard) en contenedores. |
-| `make docker-run` | Ejecuta el contenedor con la App completa. |
 
 ---
 
