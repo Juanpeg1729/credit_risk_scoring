@@ -1,5 +1,6 @@
 # 🏦 Credit Risk Scoring: End-to-End MLOps Pipeline
 
+![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 ![Python Version](https://img.shields.io/badge/python-3.11-blue)
 ![Docker](https://img.shields.io/badge/docker-enabled-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-ready-009688)
@@ -98,7 +99,7 @@ make docker run
 2. **Acceder:**
 
 ```bash
-Aquí no se seguro que poner
+C
 ```
 
 **Opción B: Ejecución Local (Desarrollo)**
