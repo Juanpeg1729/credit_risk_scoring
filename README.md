@@ -100,6 +100,7 @@ Ejecuta todo el sistema (Backend y Frontend) en contenedores aislados.
 3.  **Apagar:**
     Pulsa `Ctrl+C` o ejecuta `make docker-down`.
 
+
 **Opción B: Ejecución Local (Desarrollo)**
 
 Si deseas editar el código o entrenar manualmente. Requiere tener uv u make instalados.
