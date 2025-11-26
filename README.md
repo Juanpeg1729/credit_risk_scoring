@@ -83,7 +83,6 @@ make docker-run	Ejecuta el contenedor con la App completa.
 
 Tienes dos formas de ejecutar este proyecto: la Profesional (Docker) y la de Desarrollo (Local).
 
-
 **Opción A: Usando Docker (Recomendado)**
 
 No necesitas instalar Python ni librerías, solo Docker. Garantiza que funcione igual en cualquier máquina. 
@@ -95,48 +94,53 @@ make docker-build
 make docker run
 ```
 
-2. **Ejecutar el contenedor:**
+2. **Acceder:**
 
+```bash
+Aquí no se seguro que poner
 ```
-docker run -p 8000:8000 adult-income-app
-```
-
-3. **Acceder:** abre tu navegador en http://localhost:8000/docs
-
 
 **Opción B: Ejecución Local (Desarrollo)**
 
-Si deseas editar el código o entrenar manualmente. Requisito: tener uv instalado.
+Si deseas editar el código o entrenar manualmente. Requiere tener uv u make instalados.
 
 1. **Instalar dependencias:**
 
-```
-uv sync
-```
-
-2. **Entrenar el modelo (Pipeline completo):** Ejecuta la limpieza, validación y entrenamiento.
-
-```
-uv run python -m src.train
+```bash
+make install
 ```
 
-3. **Levantar la API:**
+2. **Entrenar el modelo (Genera final.model.pkl):**
 
+```bash
+make train
 ```
-uv run uvicorn src.api:app --reload
+
+3. **Ejecutar interfaces:**
+
+- Para API:
+```
+make api
+```
+
+- Para el dashboard:
+```
+make dashboard
 ```
 
 ---
 
-## 🧪 API de Predicción
+## 🧠 Dashboard & Interpretabilidad (XAI)
 
-El proyecto incluye una API REST documentada automáticamente con Swagger UI.
+1. El proyecto incluye un Dashboard interactivo construido con Streamlit que permite:
 
-- **Endpoint:** `/predict` (POST)  
-- **Input:** JSON con datos demográficos (edad, educación, ocupación, etc.).  
-- **Output:** Predicción de clase (`<=50K` o `>50K`) y probabilidad de confianza.
+2. Simular perfiles de clientes mediante un formulario intuitivo.
 
-**Ejemplo de uso (Swagger UI):** *(Imagen referencial de la interfaz que verás al lanzar el proyecto)*
+3. Obtener la predicción de riesgo en tiempo real.
+
+4. Entender el "Por qué": Integración de SHAP (SHapley Additive exPlanations) para visualizar qué variables específicas (edad, historial, saldo) empujaron la decisión del modelo hacia "Riesgo" o "Aprobado".
+
+(Asegúrate de subir una captura de tu dashboard a la carpeta images/ y descomentar esta línea)
 
 ---
 
@@ -144,18 +148,13 @@ El proyecto incluye una API REST documentada automáticamente con Swagger UI.
 
 Aunque el código ahora es modular, la lógica de Machine Learning subyacente se mantiene sólida:
 
-1. **Ingeniería de Datos:**
-   - Saneamiento de errores de formato (ej. valores corruptos como `5E-1`).
-   - Imputación de nulos y eliminación de duplicados.
+1. **Ingeniería de Datos:** Ingestión de datos crudos (.data), mapeo de variables categóricas cifradas (ej: A11 -> Saldo Negativo) y normalización de moneda.
 
-2. **Pipeline de Preprocesamiento:**
-   - `ColumnTransformer` para aplicar escalado (`StandardScaler`) a numéricas y One-Hot Encoding a categóricas.
+2. **Pipeline de Preprocesamiento:** ColumnTransformer para escalado numérico y codificación One-Hot, integrado en un Pipeline de Scikit-Learn.
 
-3. **Selección de Modelos:**
-   - Se utilizó **Validación Cruzada Anidada (Nested CV)** para comparar XGBoost, Random Forest y Regresión Logística sin sesgo.
+3. **Selección de Modelos:** Comparativa mediante Validación Cruzada Anidada (Nested CV) para evitar el sobreajuste.
 
-4. **Optimización:**
-   - Se implementó **Optuna** para el ajuste fino (fine-tuning) de hiperparámetros del modelo ganador.
+4. **Optimización:** Búsqueda bayesiana con Optuna para maximizar el F1-Score (dado el desbalanceo de clases).
 
 ---
 
