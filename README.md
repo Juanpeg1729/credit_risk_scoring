@@ -175,4 +175,4 @@ Tras la evaluación rigurosa, **XGBoost** fue seleccionado como el modelo de pro
 **Juan Pedro García Sanz**
 
 * **GitHub:** [@Juanpeg1729](https://github.com/Juanpeg1729)
-* **LinkedIn:** [Perfil de LinkedIn](https://www.linkedin.com/in/juan-pedro-garcía-sanz-443b31343)
+* **LinkedIn:** [Perfil de LinkedIn](https://www.linkedin.com/in/juanpedrogarciasanz)
