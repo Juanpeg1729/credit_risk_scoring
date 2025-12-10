@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from typing import Tuple
 
 # Nombres oficiales según la documentación de UCI para 'german.data'
@@ -28,82 +27,51 @@ COLUMN_NAMES = [
 ]
 
 def load_data(filepath: str) -> pd.DataFrame:
-    """
-    Carga el dataset 'german.data'.
-    Al ser un archivo .data sin cabeceras y separado por espacios,
-    necesitamos parámetros especiales.
-    """
-    print(f"   📂 Cargando datos crudos desde: {filepath}")
-    
-    # sep='\s+' significa "cualquier espacio en blanco (espacio o tabulador)"
-    df = pd.read_csv(
-        filepath, 
-        sep=r'\s+', 
-        header=None, 
-        names=COLUMN_NAMES
-    )
+    """Carga el dataset german.data sin cabeceras."""
+    print(f"Cargando datos desde: {filepath}")
+    df = pd.read_csv(filepath, sep=r'\s+', header=None, names=COLUMN_NAMES)
     return df
 
 def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Limpia y adapta el dataframe para el entrenamiento.
-    """
+    """Limpia y prepara el dataframe para entrenamiento."""
     df = df.copy()
 
-    # 🆕 1. SANEAMIENTO INICIAL: Eliminar duplicados
-    # Es vital hacerlo antes de nada para no entrenar con datos repetidos
+    # Eliminar duplicados
     initial_rows = len(df)
     df.drop_duplicates(inplace=True)
     if len(df) < initial_rows:
-        print(f"   🧹 Se eliminaron {initial_rows - len(df)} filas duplicadas.")
+        print(f"Eliminadas {initial_rows - len(df)} filas duplicadas")
     
-    # 1. Tratamiento del Target (Risk)
-    # En el dataset original de UCI:
-    #   1 = Good (Bueno)
-    #   2 = Bad (Malo / Riesgo)
-    #
-    # Para Machine Learning (Detección de Riesgo/Fraude), la convención es:
-    #   0 = Clase Negativa (Normal/Good)
-    #   1 = Clase Positiva (Lo que buscamos/Bad)
-    
+    # Normalizar target: 1 (Good) -> 0, 2 (Bad) -> 1
     if 'Risk' in df.columns:
-        # Mapeamos: 1 -> 0, 2 -> 1
         df['Risk'] = df['Risk'].map({1: 0, 2: 1})
-
-        # 🆕 3. SEGURIDAD: Eliminar filas donde el Target sea Nulo
-        # Si por algún error de lectura hay un NaN en Risk, esa fila no sirve
         df = df.dropna(subset=['Risk'])
-
-        print(f"   🎯 Target 'Risk' normalizado: 1 (Bad) / 0 (Good)")
         
-        # Validación rápida
         risk_counts = df['Risk'].value_counts()
-        print(f"      Distribución: {risk_counts.to_dict()}")
+        print(f"Target normalizado - Distribución: {risk_counts.to_dict()}")
 
-    # 2. No necesitamos borrar columnas específicas como en Adult Income
-    # porque este dataset es más técnico y todas las variables aportan valor.
-    
-    # 3. Tratamiento de tipos (Opcional pero recomendado)
-    # Algunas columnas categóricas como 'Job' a veces vienen como números.
-    # Es mejor forzarlas a texto para que el OneHotEncoder las trate bien.
-    categorical_cols = ["Status_of_checking_account", "Credit_history", "Purpose", 
-                        "Savings_account_bonds", "Present_employment_since", 
-                        "Personal_status_and_sex", "Other_debtors_guarantors", 
-                        "Property", "Other_installment_plans", "Housing", 
-                        "Telephone", "foreign_worker"]
+    # Convertir columnas categóricas a string
+    categorical_cols = [
+        "Status_of_checking_account", "Credit_history", "Purpose", 
+        "Savings_account_bonds", "Present_employment_since", 
+        "Personal_status_and_sex", "Other_debtors_guarantors", 
+        "Property", "Other_installment_plans", "Housing", 
+        "Telephone", "foreign_worker"
+    ]
     
     for col in categorical_cols:
         if col in df.columns:
             df[col] = df[col].astype(str)
 
-    # NUEVO: Conversión monetaria a Euros actuales
-    # Factor 0.85 aprox (Cambio DM->EUR + Inflación 30 años)
+    # Conversión monetaria DM -> EUR (factor 0.85)
     if 'Credit_amount' in df.columns:
         df['Credit_amount'] = (df['Credit_amount'] * 0.85).round(0).astype(int)
 
     return df
 
+
 def split_features_target(df: pd.DataFrame, target_col: str) -> Tuple[pd.DataFrame, pd.Series]:
+    """Separa features y target."""
     X = df.drop(columns=[target_col])
     y = df[target_col]
     return X, y

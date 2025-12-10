@@ -1,4 +1,4 @@
-# Makefile para Adult Income Project
+# Makefile para Credit Risk Scoring
 
 # Variables
 IMAGE_NAME = credit-risk-app
@@ -29,7 +29,7 @@ docker-down: ## Apagar todo
 	docker-compose down
 
 # --- Calidad y Limpieza ---
-test: ## Ejecutar tests (cuando los tengas)
+test: ## Ejecutar tests 
 	uv run pytest
 
 clean: ## Limpiar archivos temporales
@@ -40,6 +40,6 @@ clean: ## Limpiar archivos temporales
 	rm -rf .pytest_cache
 	@echo "🧹 Proyecto limpio"
 
-# --- Ayuda (Truco Pro) ---
+# --- Ayuda ---
 help: ## Muestra esta ayuda
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'

@@ -1,3 +1,5 @@
+# Estos son los archvios y carpetas que Docker debe ignorar al construir la imagen
+
 .git
 .venv
 mlruns

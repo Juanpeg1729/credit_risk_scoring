@@ -5,7 +5,7 @@ __pycache__/
 .env
 .pytest_cache/
 
-# --- Datos y Modelos (¡Muy Importante!) ---
+
 # Ignoramos el CSV para no llenar GitHub de datos
 data/*.csv
 # Ignoramos el modelo entrenado (se debe regenerar o bajar de un registro de modelos)
