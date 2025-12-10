@@ -150,7 +150,7 @@ Todos los experimentos están registrados en MLflow con métricas, parámetros y
 **Juan Pedro García Sanz**
 
 - **GitHub:** [@Juanpeg1729](https://github.com/Juanpeg1729)
-- **LinkedIn:** [juanpedrogarciasanz](https://www.linkedin.com/in/juanpedrogarciasanz)
+- **LinkedIn:** [Juan Pedro García Sanz](https://www.linkedin.com/in/juanpedrogarciasanz)
 
 ---
 
