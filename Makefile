@@ -1,45 +1,33 @@
-# Makefile para Credit Risk Scoring
+.PHONY: help install api dashboard docker-build docker-up docker-down clean
 
-# Variables
-IMAGE_NAME = credit-risk-app
-PORT = 8000
+help:
+	@echo "Comandos disponibles:"
+	@echo "  make install       - Instalar dependencias"
+	@echo "  make api           - Levantar API"
+	@echo "  make dashboard     - Abrir dashboard"
+	@echo "  make docker-build  - Construir imagen Docker"
+	@echo "  make docker-up     - Levantar servicios"
+	@echo "  make docker-down   - Detener servicios"
+	@echo "  make clean         - Limpiar archivos temporales"
 
-# --- Instalación y Entorno ---
-install: ## Instalar dependencias con uv
+install:
 	uv sync
 
-# --- Ejecución Local ---
-train: ## Entrenar el modelo (Pipeline completo)
-	uv run python -m src.train
-
-api: ## Levantar la API en modo desarrollo
+api:
 	uv run uvicorn src.api:app --reload
 
-dashboard: ## Abrir el Dashboard de Streamlit
+dashboard:
 	uv run streamlit run src/dashboard.py
 
-# --- Docker ---
-docker-build: ## Construir la imagen de Docker
-	docker build -t $(IMAGE_NAME) .
+docker-build:
+	docker build -t credit-risk-app .
 
-docker-up: ## Levantar TODO (API + Dashboard)
+docker-up:
 	docker-compose up
 
-docker-down: ## Apagar todo
+docker-down:
 	docker-compose down
 
-# --- Calidad y Limpieza ---
-test: ## Ejecutar tests 
-	uv run pytest
-
-clean: ## Limpiar archivos temporales
-	rm -rf __pycache__
-	rm -rf src/__pycache__
-	rm -rf src/outputs
-	rm -rf outputs/
-	rm -rf .pytest_cache
-	@echo "🧹 Proyecto limpio"
-
-# --- Ayuda ---
-help: ## Muestra esta ayuda
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+clean:
+	rm -rf __pycache__ src/__pycache__ .pytest_cache outputs/
+	@echo "Limpieza completada"

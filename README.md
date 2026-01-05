@@ -1,147 +1,203 @@
-# 🏦 Credit Risk Scoring: End-to-End MLOps Pipeline
+# 🏦 Credit Risk Scoring con Machine Learning
 
 ![Status](https://img.shields.io/badge/status-production-green)
-![Python Version](https://img.shields.io/badge/python-3.12-blue)
+![Python Version](https://img.shields.io/badge/python-3.11-blue)
+![uv](https://img.shields.io/badge/uv-enabled-purple)
 ![Docker](https://img.shields.io/badge/docker-enabled-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-ready-009688)
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=Streamlit&logoColor=white)
-![License](https://img.shields.io/badge/license-MIT-green)
 
-Pipeline MLOps completo para evaluación de riesgo crediticio. El sistema predice la probabilidad de impago basándose en el perfil financiero del cliente, utilizando datos del mercado alemán.
+Este proyecto implementa un sistema completo para evaluar el riesgo crediticio usando Machine Learning. El modelo analiza el perfil financiero de un cliente y predice automáticamente la probabilidad de impago.
 
-**Arquitectura de ML profesional** con las mejores prácticas: reproducibilidad, escalabilidad, contenedorización Docker, tracking con MLflow, API REST y dashboard interactivo con explicabilidad (SHAP).
+El sistema incluye tracking de experimentos con MLflow, explicabilidad con SHAP, una API REST para predicciones y un dashboard interactivo, todo desplegable con Docker.
 
 ---
 
-## 📋 Contenidos
-- [Tech Stack](#-arquitectura-y-tech-stack)
-- [Estructura](#-estructura-del-proyecto)
-- [Automatización](#-automatización-makefile)
-- [Instalación](#-instalación-y-uso)
-- [Dashboard](#-dashboard--interpretabilidad-xai)
-- [Metodología](#-metodología-de-ml)
-- [Resultados](#-resultados-del-modelo)
+## 📋 Tabla de Contenidos
+
+- [Arquitectura y Tech Stack](#-arquitectura-y-tech-stack)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Automatización (Makefile)](#%EF%B8%8F-automatización-makefile)
+- [Instalación y Uso](#-instalación-y-uso)
+- [Dashboard & API](#-dashboard--api)
+- [Metodología de Data Science](#-metodología-de-data-science)
+- [Resultados](#-resultados)
 - [Autor](#-autor)
 
 ---
 
 ## 🛠 Arquitectura y Tech Stack
 
-* **Python 3.12** - Lenguaje principal
-* **[uv](https://github.com/astral-sh/uv)** - Gestor de dependencias de alto rendimiento
-* **GNU Make** - Automatización de comandos
-* **[Hydra](https://hydra.cc/)** - Gestión de configuración vía YAML
-* **MLflow** - Tracking de experimentos y versionado de modelos
-* **XGBoost + Scikit-Learn** - Modelado y pipelines de preprocesamiento
-* **[Optuna](https://optuna.org/)** - Optimización bayesiana de hiperparámetros
-* **[SHAP](https://shap.readthedocs.io/)** - Interpretabilidad (XAI)
-* **FastAPI** - API REST para inferencia
-* **Streamlit** - Dashboard interactivo
-* **Docker** - Contenedorización
+El proyecto utiliza tecnologías modernas para crear un sistema robusto y escalable:
+
+* **Lenguaje:** Python 3.11
+* **Gestión de Dependencias:** [uv](https://github.com/astral-sh/uv) - Gestor de paquetes de alto rendimiento
+* **Configuración:** [Hydra](https://hydra.cc/) - Gestión de configuración mediante YAML
+* **Modelo de ML:** 
+    * **XGBoost:** Modelo de Gradient Boosting
+    * **Scikit-Learn:** Pipelines de preprocesamiento
+    * **Optuna:** Optimización de hiperparámetros
+* **Tracking:** MLflow - Registro de experimentos y modelos
+* **Interpretabilidad:** [SHAP](https://shap.readthedocs.io/) - Explicaciones visuales de predicciones
+* **Interfaces:** 
+    * **FastAPI:** API REST para predicciones
+    * **Streamlit:** Dashboard interactivo con explicabilidad
+* **Despliegue:** Docker y Docker Compose
 
 ---
 
 ## 📂 Estructura del Proyecto
 
+El código está organizado en módulos separados para facilitar el mantenimiento:
+
 ```text
 .
 ├── config/              # Configuración (Hydra YAML)
-├── data/                # Datos crudos (German Credit Data)
-├── images/              # Imágenes para documentación
-├── mlruns/              # Tracking de experimentos MLflow
-├── notebooks/           # Notebooks de análisis e interpretabilidad
+│   └── config.yaml      # Parámetros del modelo y datos
+├── data/                # Dataset (German Credit Data)
+├── images/              # Gráficos y visualizaciones
+├── mlruns/              # Experimentos MLflow
+├── notebooks/           # Análisis exploratorio e interpretabilidad
 ├── src/                 # Código fuente
+│   ├── __init__.py
 │   ├── api.py           # API REST (FastAPI)
-│   ├── dashboard.py     # Dashboard interactivo (Streamlit + SHAP)
-│   ├── pipeline.py      # Pipeline de ML (XGBoost + transformadores)
-│   ├── preprocessing.py # Limpieza e ingeniería de datos
-│   └── train.py         # Entrenamiento y logging a MLflow
-├── Dockerfile           # Imagen de producción
-├── docker-compose.yml   # Orquestación de servicios
-├── Makefile             # Comandos de automatización
-└── pyproject.toml       # Dependencias
+│   ├── dashboard.py     # Dashboard interactivo (Streamlit)
+│   ├── pipeline.py      # Pipeline de ML
+│   ├── preprocessing.py # Limpieza de datos
+│   └── train.py         # Entrenamiento con MLflow
+├── .dockerignore        # Archivos excluidos de Docker
+├── .gitignore           # Archivos excluidos de Git
+├── docker-compose.yml   # Configuración de contenedores
+├── Dockerfile           # Imagen de Docker
+├── Makefile             # Comandos simplificados
+├── pyproject.toml       # Dependencias del proyecto
+├── uv.lock              # Versiones exactas de dependencias
+└── README.md            # Documentación
 ```
 
 ---
 
 ## 🕹️ Automatización (Makefile)
 
+El proyecto incluye comandos simplificados para facilitar su uso:
+
 | Comando | Descripción |
-|---------|-------------|
-| `make install` | Instala dependencias con `uv` |
-| `make train` | Entrena el modelo y registra en MLflow |
-| `make api` | Inicia API REST (FastAPI) en local |
-| `make dashboard` | Inicia dashboard (Streamlit) en local |
-| `make docker-build` | Construye imagen Docker |
-| `make docker-up` | Levanta API + Dashboard en contenedores |
+| :--- | :--- |
+| `make help` | Muestra todos los comandos disponibles |
+| `make install` | Instala las dependencias del proyecto |
+| `make api` | Inicia el servidor API en local |
+| `make dashboard` | Inicia el dashboard interactivo |
+| `make docker-build` | Construye las imágenes de Docker |
+| `make docker-up` | Inicia todo el sistema con Docker |
 | `make docker-down` | Detiene todos los contenedores |
-| `make clean` | Limpia archivos temporales |
+| `make clean` | Limpia archivos temporales y caché |
 
 ---
 
 ## 💻 Instalación y Uso
 
-### Opción A: Docker (Recomendado)
+### Opción A: Docker (Recomendada)
 
-```bash
-# Construir y arrancar todo el sistema
-make docker-up
-```
+1. **Inicia el sistema completo:**
 
-**Acceder a los servicios:**
-- 🎨 **Dashboard:** http://localhost:8501
-- ⚙️ **API Docs:** http://localhost:8000/docs
+    ```bash
+    make docker-up
+    ```
 
-```bash
-# Detener servicios
-make docker-down
-```
+    La primera vez puede tardar unos minutos mientras descarga las imágenes.
+
+2. **Acceder a las interfaces:**
+
+    * Dashboard: http://localhost:8501
+    * API: http://localhost:8000/docs
+
+3. **Detener el sistema:**
+
+    ```bash
+    make docker-down
+    ```
 
 ### Opción B: Ejecución Local
 
-**Requisitos:** Python 3.12+, uv instalado
+Para desarrollo o si prefieres ejecutar sin Docker:
 
-```bash
-# 1. Instalar dependencias
-make install
+1. **Instalar dependencias:**
 
-# 2. Entrenar modelo (registra en MLflow)
-make train
+    ```bash
+    make install
+    ```
 
-# 3. Ejecutar servicios
-make api        # API en http://localhost:8000
-make dashboard  # Dashboard en http://localhost:8501
-```
+2. **Ejecutar servicios (en terminales separadas):**
 
----
+    ```bash
+    make api        # Terminal 1: Inicia la API
+    make dashboard  # Terminal 2: Inicia el dashboard
+    ```
 
-## 🧠 Dashboard & Interpretabilidad (XAI)
+3. **Acceder a las interfaces:**
 
-Dashboard interactivo con Streamlit que proporciona:
+    * Dashboard: http://localhost:8501
+    * API: http://localhost:8000/docs
 
-1. **Simulación de perfiles** - Formulario intuitivo para datos del cliente
-2. **Predicción en tiempo real** - Probabilidad de impago instantánea
-3. **Explicabilidad con SHAP** - Visualización de qué variables (edad, historial, saldo) impactan en la decisión del modelo
+**Nota:** Asegúrate de tener el archivo `final_model.pkl` en la raíz del proyecto antes de ejecutar la API o el dashboard.
 
 ---
 
-## ⚙️ Metodología de ML
+## 🧠 Dashboard & API
 
-1. **Ingeniería de Datos** - Limpieza, mapeo de variables categóricas (A11 → Saldo Negativo) y normalización de moneda
-2. **Pipeline de Preprocesamiento** - ColumnTransformer con escalado numérico y codificación One-Hot
-3. **Selección de Modelos** - Validación Cruzada Anidada (Nested CV) para evitar sobreajuste
-4. **Optimización** - Búsqueda bayesiana con Optuna maximizando F1-Score
-5. **Tracking** - Registro de experimentos, parámetros y modelos en MLflow
+El sistema ofrece dos formas de interactuar con el modelo:
+
+### 1. Dashboard Interactivo (Streamlit)
+
+Interfaz web simple y visual:
+
+* **Formulario de datos:** Campos para introducir el perfil del cliente
+* **Predicción en tiempo real:** Muestra la probabilidad de impago
+* **Explicabilidad con SHAP:** Gráficos que muestran qué variables (edad, saldo, historial crediticio) influyen más en la decisión
+
+### 2. API REST (FastAPI)
+
+Endpoint programático para integraciones:
+
+* **Endpoint `/predict`:** Recibe el perfil del cliente en formato JSON y devuelve la predicción
+* **Validación automática:** Verifica que los datos de entrada sean correctos
+* **Documentación interactiva:** Interfaz Swagger en `/docs` para probar la API directamente desde el navegador
 
 ---
 
-## 📊 Resultados del Modelo
+## ⚙️ Metodología de Data Science
 
-**XGBoost** seleccionado como modelo de producción por su capacidad para manejar desbalanceo de clases y capturar relaciones no lineales.
+### 1. Ingeniería de Datos:
+
+* **Dataset:** German Credit Data con información de clientes bancarios
+* **Limpieza:** Mapeo de variables categóricas codificadas (ej: A11 → "Saldo Negativo")
+* **Preprocesamiento:** Pipeline con escalado para variables numéricas y codificación One-Hot para categóricas
+
+### 2. Modelado:
+
+* **Validación Cruzada Anidada:** Evita sobreajuste al seleccionar el mejor modelo
+* **Modelos evaluados:** Logistic Regression, Random Forest, XGBoost
+* **Optimización:** Búsqueda bayesiana de hiperparámetros con Optuna maximizando F1-Score
+* **Tracking:** Todos los experimentos registrados en MLflow
+
+### 3. Interpretabilidad:
+
+* **SHAP Values:** Explica cada predicción mostrando qué variables son más importantes
+* **Transparencia:** Permite entender por qué el modelo toma cada decisión
+
+---
+
+## 📊 Resultados
+
+**XGBoost** fue seleccionado como modelo de producción por su excelente desempeño:
+
+* **Manejo de desbalanceo de clases:** Penaliza correctamente los falsos negativos (clientes de alto riesgo)
+* **Captura de relaciones no lineales:** Detecta patrones complejos entre variables
+* **Robustez:** Rendimiento consistente en validación cruzada
 
 ![Comparación de modelos mediante Validación Cruzada Anidada](images/ncv_model_comparison.png)
 
-Todos los experimentos están registrados en MLflow con métricas, parámetros y artefactos versionados.
+Todos los experimentos están disponibles en MLflow con métricas, parámetros y artefactos versionados.
 
 ---
 
@@ -149,11 +205,5 @@ Todos los experimentos están registrados en MLflow con métricas, parámetros y
 
 **Juan Pedro García Sanz**
 
-- **GitHub:** [@Juanpeg1729](https://github.com/Juanpeg1729)
-- **LinkedIn:** [Juan Pedro García Sanz](https://www.linkedin.com/in/juanpedrogarciasanz)
-
----
-
-## 📝 Licencia
-
-Este proyecto está bajo la licencia MIT.
+* **GitHub:** [@Juanpeg1729](https://github.com/Juanpeg1729)
+* **LinkedIn:** [Juan Pedro García Sanz](https://www.linkedin.com/in/juanpedrogarciasanz)

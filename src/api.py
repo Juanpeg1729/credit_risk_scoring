@@ -13,7 +13,6 @@ class CreditInput(BaseModel):
     Age_in_years: int = Field(..., example=35)
     Number_of_existing_credits_at_this_bank: int = Field(..., example=1)
     Number_of_people_being_liable_to_provide_maintenance_for: int = Field(..., example=1)
-    
     Status_of_checking_account: str = Field(..., example="A11")
     Credit_history: str = Field(..., example="A32")
     Purpose: str = Field(..., example="A43")

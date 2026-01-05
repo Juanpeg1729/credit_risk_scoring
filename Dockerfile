@@ -1,33 +1,30 @@
-# 1. Usamos una imagen base de Python ligera y moderna
-FROM python:3.12-slim
+# Usamos una imagen ligera de Python 3.11 (Bookworm es Debian 12)
+FROM python:3.11-slim-bookworm
 
-# 2. Evitamos que Python genere archivos .pyc y activamos logs
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+# Instalamos uv directamente desde su imagen oficial
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
-# 3. Establecemos el directorio de trabajo dentro del contenedor
+# Evita archivos .pyc y habilita logs en tiempo real
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# Directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# 4. Instalamos las dependencias del sistema necesarias para compilar
-RUN apt-get update && apt-get install -y --no-install-recommends gcc \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# 5. Copiamos los archivos de gestión de dependencias primero (para aprovechar caché)
+# Copiamos primero los archivos de dependencias 
 COPY pyproject.toml uv.lock ./
 
-# 6. Instalamos 'uv' y las dependencias del proyecto
-RUN pip install uv && uv sync --frozen
+# Instalamos las dependencias del sistema
+RUN uv sync
 
-# 7. Copiamos el resto del código del proyecto
+# Copiamos el resto del código
 COPY . .
 
-# 8. Entrenamos el modelo DENTRO del contenedor al construir la imagen
-# (Esto asegura que el modelo .pkl esté listo antes de arrancar la API)
-RUN uv run python -m src.train
+# Añade el entorno virtual al PATH para ejecutar comandos sin "uv run"
+ENV PATH="/app/.venv/bin:$PATH"
 
-# 9. Exponemos el puerto donde correrá la API
+# Documenta que el contenedor escucha en el puerto 8000
 EXPOSE 8000
 
-# 10. Comando para arrancar la API cuando se inicie el contenedor
-CMD ["uv", "run", "uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8000"]
+# Comando que se ejecuta al iniciar el contenedor
+CMD ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8000"]
