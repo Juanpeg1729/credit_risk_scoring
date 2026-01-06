@@ -14,10 +14,10 @@ install:
 	uv sync
 
 api:
-	uv run uvicorn src.api:app --reload
+	uv run python -m uvicorn src.api:app --reload
 
 dashboard:
-	uv run streamlit run src/dashboard.py
+	uv run python -m streamlit run src/dashboard.py
 
 docker-build:
 	docker build -t credit-risk-app .

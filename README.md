@@ -176,7 +176,7 @@ Endpoint programático para integraciones:
 ### 2. Modelado:
 
 * **Validación Cruzada Anidada:** Evita sobreajuste al seleccionar el mejor modelo
-* **Modelos evaluados:** Logistic Regression, Random Forest, XGBoost
+* **Modelos evaluados:** Logistic Regression, KNN, Random Forest, XGBoost
 * **Optimización:** Búsqueda bayesiana de hiperparámetros con Optuna maximizando F1-Score
 * **Tracking:** Todos los experimentos registrados en MLflow
 

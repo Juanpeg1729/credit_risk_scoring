@@ -1,73 +1,80 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+from fastapi import FastAPI
+from pydantic import BaseModel
 import joblib
 import pandas as pd
-import os
 
-
+# 1. Definimos la estructura de datos (Input)
 class CreditInput(BaseModel):
-    Duration_in_month: int = Field(..., example=24)
-    Credit_amount: int = Field(..., example=2100)
-    Installment_rate_in_percentage_of_disposable_income: int = Field(..., example=4)
-    Present_residence_since: int = Field(..., example=2)
-    Age_in_years: int = Field(..., example=35)
-    Number_of_existing_credits_at_this_bank: int = Field(..., example=1)
-    Number_of_people_being_liable_to_provide_maintenance_for: int = Field(..., example=1)
-    Status_of_checking_account: str = Field(..., example="A11")
-    Credit_history: str = Field(..., example="A32")
-    Purpose: str = Field(..., example="A43")
-    Savings_account_bonds: str = Field(..., example="A61")
-    Present_employment_since: str = Field(..., example="A73")
-    Personal_status_and_sex: str = Field(..., example="A93")
-    Other_debtors_guarantors: str = Field(..., example="A101")
-    Property: str = Field(..., example="A121")
-    Other_installment_plans: str = Field(..., example="A143")
-    Housing: str = Field(..., example="A152")
-    Job: str = Field(..., example="A173")
-    Telephone: str = Field(..., example="A192")
-    foreign_worker: str = Field(..., example="A201")
+    Status_of_checking_account: str
+    Duration_in_month: int
+    Credit_history: str
+    Purpose: str
+    Credit_amount: int
+    Savings_account_bonds: str
+    Present_employment_since: str
+    Installment_rate_in_percentage_of_disposable_income: int
+    Personal_status_and_sex: str
+    Other_debtors_guarantors: str
+    Present_residence_since: int
+    Property: str
+    Age_in_years: int
+    Other_installment_plans: str
+    Housing: str
+    Number_of_existing_credits_at_this_bank: int
+    Job: str
+    Number_of_people_being_liable_to_provide_maintenance_for: int
+    Telephone: str
+    foreign_worker: str
 
+    # Un solo bloque de configuración para el ejemplo del Swagger
     class Config:
-        populate_by_name = True
+        json_schema_extra = {
+            "example": {
+                "Status_of_checking_account": "A11",
+                "Duration_in_month": 6,
+                "Credit_history": "A32",
+                "Purpose": "A43",
+                "Credit_amount": 1169,
+                "Savings_account_bonds": "A65",
+                "Present_employment_since": "A75",
+                "Installment_rate_in_percentage_of_disposable_income": 4,
+                "Personal_status_and_sex": "A93",
+                "Other_debtors_guarantors": "A101",
+                "Present_residence_since": 4,
+                "Property": "A121",
+                "Age_in_years": 67,
+                "Other_installment_plans": "A143",
+                "Housing": "A152",
+                "Number_of_existing_credits_at_this_bank": 2,
+                "Job": "A173",
+                "Number_of_people_being_liable_to_provide_maintenance_for": 1,
+                "Telephone": "A192",
+                "foreign_worker": "A201"
+            }
+        }
 
-
-app = FastAPI(title="Credit Risk Scoring API", version="1.0.0")
-
+# 2. Inicializamos la App
+app = FastAPI(title="Credit Risk API")
 model = None
 
-
+# 3. Cargar el modelo al arrancar
 @app.on_event("startup")
 def load_model():
     global model
-    model_path = "final_model.pkl"
+    model = joblib.load("final_model.pkl")
 
-    if not os.path.exists(model_path):
-        raise FileNotFoundError("❌ No se encuentra el modelo. Ejecuta 'uv run python -m src.train' primero.")
-    
-    model = joblib.load(model_path)
-    print("✅ Modelo cargado en memoria")
-
-
+# 4. Endpoint de Predicción
 @app.post("/predict")
-def predict_credit_risk(input_data: CreditInput):
-    if model is None:
-        raise HTTPException(status_code=503, detail="Modelo no disponible")
+def predict(data: CreditInput):
+    input_df = pd.DataFrame([data.dict()])
     
-    input_dict = input_data.dict()
-    input_df = pd.DataFrame([input_dict])
+    # Realizamos la predicción
+    pred = model.predict(input_df)[0]
+    proba = model.predict_proba(input_df)[0][1]
     
-    prediction = model.predict(input_df)[0]
-    probability = model.predict_proba(input_df)[0][1]
-    
-    result = "ALTO RIESGO (No conceder)" if prediction == 1 else "BAJO RIESGO (Conceder)"
-    
+    # Retornamos el resultado JSON
     return {
-        "prediction": result,
-        "probability_default": round(float(probability), 4),
-        "message": "Evaluación de Riesgo completada"
+        "prediction": "Risk" if pred == 1 else "No Risk",
+        "probability": float(proba),
+        "status": "Success"
     }
-
-
-@app.get("/")
-def root():
-    return {"message": "API de Credit Risk Scoring funcionando. Ve a /docs para probarla."}
