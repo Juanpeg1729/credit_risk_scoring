@@ -14,10 +14,3 @@ outputs/
 multirun/
 .trash/
 
-# IDEs
-.vscode/
-.idea/
-.DS_Store
-
-# Docker
-.docker/
